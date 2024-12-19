@@ -1,0 +1,31 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on tag pushes like v1.0.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Upload release assets to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./dist/*.exe  # Change this to match the path to your built files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
